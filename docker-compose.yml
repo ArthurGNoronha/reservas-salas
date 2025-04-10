@@ -4,7 +4,7 @@ services:
     restart: always
     container_name: reserva_app
     build:
-      context: .
+      context: ./application
       dockerfile: Dockerfile
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db-reserva:5432/reservasdb
@@ -27,7 +27,7 @@ services:
     restart: always
     container_name: sala_app
     build:
-      context: ../salaApplication
+      context: ./salaApplication
       dockerfile: Dockerfile
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db-sala:5432/saladb
@@ -45,7 +45,7 @@ services:
     restart: always
     container_name: user_app
     build:
-      context: ../userApplication
+      context: ./userApplication
       dockerfile: Dockerfile
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db-user:5432/userdb
