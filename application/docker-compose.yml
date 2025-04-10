@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/reservasdb
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-reserva:5432/reservasdb
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=admin
       - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
@@ -19,7 +19,7 @@ services:
     ports:
       - "8082:8082"
     depends_on:
-      - db
+      - db-reserva
     networks:
       - net
 
@@ -30,14 +30,14 @@ services:
       context: ../salaApplication
       dockerfile: Dockerfile
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/reservasdb
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-sala:5432/saladb
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=admin
       - SERVER_PORT=8083 
     ports:
       - "8083:8083"
     depends_on:
-      - db
+      - db-sala
     networks:
       - net
 
@@ -48,18 +48,18 @@ services:
       context: ../userApplication
       dockerfile: Dockerfile
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/reservasdb
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-user:5432/userdb
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=admin
       - SERVER_PORT=8085
     ports:
       - "8085:8085"
     depends_on:
-      - db
+      - db-user
     networks:
       - net
 
-  db:
+  db-reserva:
     image: postgres:latest
     restart: always
     container_name: reservasdb
@@ -71,6 +71,32 @@ services:
       - "5432:5432"
     networks:
       - net
+
+  db-user:
+    image: postgres:latest
+    restart: always
+    container_name: userdb
+    environment:
+      POSTGRES_DB: userdb
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5433:5432"
+    networks:
+      - net
+
+  db-sala:
+    image: postgres:latest
+    restart: always
+    container_name: saladb
+    environment:
+      POSTGRES_DB: saladb
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5434:5432"
+    networks:
+      - net    
 
   adminer:
     container_name: adminer
