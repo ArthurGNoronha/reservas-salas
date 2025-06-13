@@ -5,12 +5,8 @@
 </head>
 <body>
 <h2>Usuários Cadastrados</h2>
-<ul>
-    <li th:each="usuario : ${usuarios}">
-        <span th:text="${usuario.nome}"></span> - Email: <span th:text="${usuario.email}"></span> - Telefone: <span th:text="${usuario.telefone}"></span>
-    </li>
-</ul>
-<form action="/usuarios/salvar" method="post">
+<ul id="listaUsuarios"></ul>
+<form id="usuarioForm">
     <input type="text" name="nome" placeholder="Nome" required />
     <input type="email" name="email" placeholder="E-mail" required />
     <input type="password" name="senha" placeholder="Senha" required />
@@ -23,5 +19,51 @@
     <input type="date" name="dataNascimento" placeholder="Data de Nascimento" required />
     <button type="submit">Salvar</button>
 </form>
+<script>
+async function carregarUsuarios() {
+    const resp = await fetch('/usuarios', {
+        method: 'GET'
+    });
+    if (resp.ok) {
+        const usuarios = await resp.json();
+        const ul = document.getElementById('listaUsuarios');
+        ul.innerHTML = '';
+        usuarios.forEach(u => {
+            const li = document.createElement('li');
+            li.textContent = `${u.nome} - Email: ${u.email} - Telefone: ${u.telefone}`;
+            ul.appendChild(li);
+        });
+    }
+}
+carregarUsuarios();
+
+document.getElementById('usuarioForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const data = {
+        nome: form.nome.value,
+        email: form.email.value,
+        senha: form.senha.value,
+        telefone: form.telefone.value,
+        rua: form.rua.value,
+        numero: form.numero.value,
+        cidade: form.cidade.value,
+        cep: form.cep.value,
+        cpf: form.cpf.value,
+        dataNascimento: form.dataNascimento.value
+    };
+    const response = await fetch('/usuarios', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+    if (response.ok) {
+        form.reset();
+        carregarUsuarios();
+    } else {
+        alert('Erro ao cadastrar usuário!');
+    }
+});
+</script>
 </body>
 </html>

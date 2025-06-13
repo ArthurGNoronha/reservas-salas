@@ -4,7 +4,7 @@ services:
     restart: always
     container_name: reserva_app
     build:
-      context: ./application
+      context: ./reservasApplication
       dockerfile: Dockerfile
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db-reserva:5432/reservasdb
@@ -16,12 +16,14 @@ services:
       - SPRING_JPA_SHOW_SQL=true
       - SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL=true
       - SERVER_PORT=8082
+      - SPRING_RABBITMQ_HOST=rabbitmq
     ports:
       - "8082:8082"
     depends_on:
       - db-reserva
+      - rabbitmq
     networks:
-      - net
+      - net-reserva
 
   sala-app:
     restart: always
@@ -33,13 +35,15 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db-sala:5432/saladb
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=admin
-      - SERVER_PORT=8083 
+      - SERVER_PORT=8083
+      - SPRING_RABBITMQ_HOST=rabbitmq
     ports:
       - "8083:8083"
     depends_on:
       - db-sala
+      - rabbitmq
     networks:
-      - net
+      - net-sala
 
   user-app:
     restart: always
@@ -52,12 +56,14 @@ services:
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=admin
       - SERVER_PORT=8085
+      - SPRING_RABBITMQ_HOST=rabbitmq
     ports:
       - "8085:8085"
     depends_on:
       - db-user
+      - rabbitmq
     networks:
-      - net
+      - net-user
 
   db-reserva:
     image: postgres:latest
@@ -70,7 +76,7 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - net
+      - net-reserva
 
   db-user:
     image: postgres:latest
@@ -83,7 +89,7 @@ services:
     ports:
       - "5433:5432"
     networks:
-      - net
+      - net-user
 
   db-sala:
     image: postgres:latest
@@ -96,7 +102,7 @@ services:
     ports:
       - "5434:5432"
     networks:
-      - net    
+      - net-sala
 
   adminer:
     container_name: adminer
@@ -105,8 +111,58 @@ services:
     ports:
       - "8081:8080"
     networks:
-      - net
+      - net-sala
+      - net-user
+      - net-reserva
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - net-sala
+      - net-user
+      - net-reserva
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+      
+  eureka-server:
+    build:
+      context: ./eurekaServer
+      dockerfile: Dockerfile
+    container_name: eureka_server
+    ports:
+      - "8761:8761"
+    networks:
+      - net-sala
+      - net-user
+      - net-reserva
+
+  gateway-app:
+    build:
+      context: ./gatewayApplication
+      dockerfile: Dockerfile
+    container_name: gateway_app
+    ports:
+      - "8090:8090"
+    depends_on:
+      - eureka-server
+      - user-app
+      - sala-app
+      - reserva-app
+    networks:
+      - net-sala
+      - net-user
+      - net-reserva
 
 networks:
-  net:
+  net-sala:
+    driver: bridge
+  net-user:
+    driver: bridge
+  net-reserva:
     driver: bridge

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reservas</title>
+</head>
+<body>
+    <h2>Reservas de Salas</h2>
+    <ul id="listaReservas"></ul>
+
+    <h3>Salas Disponíveis</h3>
+    <ul id="listaSalas"></ul>
+
+    <h3>Usuários Cadastrados</h3>
+    <ul id="listaUsuarios"></ul>
+
+    <form id="reservaForm">
+        <input type="text" name="salaId" placeholder="ID da Sala" required />
+        <input type="text" name="usuarioId" placeholder="ID do Usuário" required />
+        <input type="datetime-local" name="dataHora" required />
+        <button type="submit">Reservar</button>
+    </form>
+
+    <script>
+    async function carregarReservas() {
+        const resp = await fetch('/reservas', { method: 'GET' });
+        if (resp.ok) {
+            const reservas = await resp.json();
+            const ul = document.getElementById('listaReservas');
+            ul.innerHTML = '';
+            reservas.forEach(r => {
+                const li = document.createElement('li');
+                li.textContent = `Sala: ${r.nomeSala} - Usuário: ${r.nomeUsuario} - Data: ${r.dataHora}`;
+                ul.appendChild(li);
+            });
+        }
+    }
+
+    async function carregarSalas() {
+        const resp = await fetch('http://127.0.0.1:8083/salas', { method: 'GET' });
+        if (resp.ok) {
+            const salas = await resp.json();
+            const ul = document.getElementById('listaSalas');
+            ul.innerHTML = '';
+            salas.forEach(s => {
+                const li = document.createElement('li');
+                li.textContent = `ID: ${s.id} - Nome: ${s.nome} - Capacidade: ${s.capacidade}`;
+                ul.appendChild(li);
+            });
+        }
+    }
+
+    async function carregarUsuarios() {
+        const resp = await fetch('http://127.0.0.1:8085/usuarios', { method: 'GET' });
+
+        if (resp.ok) {
+            const usuarios = await resp.json();
+            const ul = document.getElementById('listaUsuarios');
+            ul.innerHTML = '';
+            usuarios.forEach(u => {
+                const li = document.createElement('li');
+                li.textContent = `ID: ${u.id} - Nome: ${u.nome}`;
+                ul.appendChild(li);
+            });
+        }
+    }
+
+    carregarReservas();
+    carregarSalas();
+    carregarUsuarios();
+
+    document.getElementById('reservaForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const form = e.target;
+        const data = {
+            salaId: form.salaId.value,
+            usuarioId: form.usuarioId.value,
+            dataHora: form.dataHora.value
+        };
+        const response = await fetch('/reservas', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        if (response.ok) {
+            form.reset();
+            carregarReservas();
+        } else {
+            alert('Erro ao cadastrar reserva!');
+        }
+    });
+    </script>
+</body>
+</html>

@@ -1,19 +1,53 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
     <title>Salas</title>
 </head>
 <body>
     <h2>Salas Disponíveis</h2>
-    <ul>
-        <li th:each="sala : ${salas}">
-            <span th:text="${sala.nome}"></span> - Capacidade: <span th:text="${sala.capacidade}"></span>
-        </li>
-    </ul>
-    <form action="/salas/salvar" method="post">
+    <ul id="listaSalas"></ul>
+    <form id="salaForm">
         <input type="text" name="nome" placeholder="Nome da Sala" required />
         <input type="number" name="capacidade" placeholder="Capacidade" required />
         <button type="submit">Salvar</button>
     </form>
+    <script>
+    async function carregarSalas() {
+        const resp = await fetch('/salas', {
+            method: 'GET'
+        });
+        if (resp.ok) {
+            const salas = await resp.json();
+            const ul = document.getElementById('listaSalas');
+            ul.innerHTML = '';
+            salas.forEach(s => {
+                const li = document.createElement('li');
+                li.textContent = `${s.nome} - Capacidade: ${s.capacidade}`;
+                ul.appendChild(li);
+            });
+        }
+    }
+    carregarSalas();
+
+    document.getElementById('salaForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const form = e.target;
+        const data = {
+            nome: form.nome.value,
+            capacidade: form.capacidade.value
+        };
+        const response = await fetch('/salas', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        if (response.ok) {
+            form.reset();
+            carregarSalas();
+        } else {
+            alert('Erro ao cadastrar sala!');
+        }
+    });
+    </script>
 </body>
 </html>
