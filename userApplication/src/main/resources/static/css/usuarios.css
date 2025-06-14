@@ -4,44 +4,65 @@ body {
     margin: 0;
     padding: 0;
 }
+
 .container {
-    max-width: 700px;
+    max-width: 600px;
     margin: 40px auto;
     background: #fff;
     border-radius: 12px;
     box-shadow: 0 2px 16px rgba(0,0,0,0.08);
     padding: 32px 28px 24px 28px;
 }
+
 h2, h3 {
     text-align: center;
     color: #2a3b4c;
     margin-bottom: 18px;
 }
-ul {
+
+.usuarios-list {
     list-style: none;
     padding: 0;
-    margin-bottom: 24px;
+    margin-bottom: 32px;
 }
-ul li {
+
+.usuarios-list li {
     background: #e9f0fa;
     border-radius: 6px;
-    margin-bottom: 8px;
-    padding: 10px 16px;
+    margin-bottom: 10px;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+}
+
+.usuarios-list .nome {
+    font-weight: bold;
     color: #1a2b3c;
 }
-form {
+
+.usuarios-list .email,
+.usuarios-list .telefone {
+    font-size: 0.96em;
+    color: #3d4d5c;
+}
+
+.usuario-form {
     display: flex;
     flex-direction: column;
     gap: 14px;
-    margin-top: 18px;
 }
+
 .form-row {
     display: flex;
     gap: 12px;
 }
-form input[type="text"],
-form input[type="datetime-local"] {
+
+.usuario-form input[type="text"],
+.usuario-form input[type="email"],
+.usuario-form input[type="password"],
+.usuario-form input[type="date"] {
     flex: 1;
     padding: 8px 10px;
     border: 1px solid #bfc9d8;
@@ -50,11 +71,13 @@ form input[type="datetime-local"] {
     background: #f8fafc;
     transition: border 0.2s;
 }
-form input:focus {
+
+.usuario-form input:focus {
     border-color: #4b8df8;
     outline: none;
 }
-form button {
+
+.usuario-form button {
     margin-top: 10px;
     padding: 10px 0;
     background: #4b8df8;
@@ -66,9 +89,7 @@ form button {
     cursor: pointer;
     transition: background 0.2s;
 }
-form button:hover {
+
+.usuario-form button:hover {
     background: #2563eb;
-}
-.section {
-    margin-bottom: 32px;
 }

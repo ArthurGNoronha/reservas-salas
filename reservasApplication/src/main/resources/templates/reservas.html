@@ -2,24 +2,37 @@
 <html>
 <head>
     <title>Reservas</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <h2>Reservas de Salas</h2>
-    <ul id="listaReservas"></ul>
+    <div class="container">
+        <h2>Reservas de Salas</h2>
+        <div class="section">
+            <ul id="listaReservas"></ul>
+        </div>
 
-    <h3>Salas Disponíveis</h3>
-    <ul id="listaSalas"></ul>
+        <h3>Salas Disponíveis</h3>
+        <div class="section">
+            <ul id="listaSalas"></ul>
+        </div>
 
-    <h3>Usuários Cadastrados</h3>
-    <ul id="listaUsuarios"></ul>
+        <h3>Usuários Cadastrados</h3>
+        <div class="section">
+            <ul id="listaUsuarios"></ul>
+        </div>
 
-    <form id="reservaForm">
-        <input type="text" name="salaId" placeholder="ID da Sala" required />
-        <input type="text" name="usuarioId" placeholder="ID do Usuário" required />
-        <input type="datetime-local" name="dataHora" required />
-        <button type="submit">Reservar</button>
-    </form>
-
+        <h3>Nova Reserva</h3>
+        <form id="reservaForm">
+            <div class="form-row">
+                <input type="text" name="salaId" placeholder="ID da Sala" required />
+                <input type="text" name="usuarioId" placeholder="ID do Usuário" required />
+            </div>
+            <div class="form-row">
+                <input type="datetime-local" name="dataHora" required />
+            </div>
+            <button type="submit">Reservar</button>
+        </form>
+    </div>
     <script>
     async function carregarReservas() {
         const resp = await fetch('/reservas', { method: 'GET' });
@@ -29,7 +42,7 @@
             ul.innerHTML = '';
             reservas.forEach(r => {
                 const li = document.createElement('li');
-                li.textContent = `Sala: ${r.nomeSala} - Usuário: ${r.nomeUsuario} - Data: ${r.dataHora}`;
+                li.innerHTML = `<strong>Sala:</strong> ${r.nomeSala} &nbsp; | &nbsp; <strong>Usuário:</strong> ${r.nomeUsuario} &nbsp; | &nbsp; <strong>Data:</strong> ${r.dataHora}`;
                 ul.appendChild(li);
             });
         }
@@ -43,7 +56,7 @@
             ul.innerHTML = '';
             salas.forEach(s => {
                 const li = document.createElement('li');
-                li.textContent = `ID: ${s.id} - Nome: ${s.nome} - Capacidade: ${s.capacidade}`;
+                li.innerHTML = `<strong>ID:</strong> ${s.id} &nbsp; | &nbsp; <strong>Nome:</strong> ${s.nome} &nbsp; | &nbsp; <strong>Capacidade:</strong> ${s.capacidade}`;
                 ul.appendChild(li);
             });
         }
@@ -58,7 +71,7 @@
             ul.innerHTML = '';
             usuarios.forEach(u => {
                 const li = document.createElement('li');
-                li.textContent = `ID: ${u.id} - Nome: ${u.nome}`;
+                li.innerHTML = `<strong>ID:</strong> ${u.id} &nbsp; | &nbsp; <strong>Nome:</strong> ${u.nome}`;
                 ul.appendChild(li);
             });
         }

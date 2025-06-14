@@ -2,15 +2,21 @@
 <html>
 <head>
     <title>Salas</title>
+    <link rel="stylesheet" href="/css/salas.css">
 </head>
 <body>
-    <h2>Salas Disponíveis</h2>
-    <ul id="listaSalas"></ul>
-    <form id="salaForm">
-        <input type="text" name="nome" placeholder="Nome da Sala" required />
-        <input type="number" name="capacidade" placeholder="Capacidade" required />
-        <button type="submit">Salvar</button>
-    </form>
+    <div class="container">
+        <h2>Salas Disponíveis</h2>
+        <ul id="listaSalas" class="salas-list"></ul>
+        <h3>Cadastrar Nova Sala</h3>
+        <form id="salaForm" class="sala-form">
+            <div class="form-row">
+                <input type="text" name="nome" placeholder="Nome da Sala" required />
+                <input type="number" name="capacidade" placeholder="Capacidade" required min="1" />
+            </div>
+            <button type="submit">Salvar</button>
+        </form>
+    </div>
     <script>
     async function carregarSalas() {
         const resp = await fetch('/salas', {
@@ -22,7 +28,7 @@
             ul.innerHTML = '';
             salas.forEach(s => {
                 const li = document.createElement('li');
-                li.textContent = `${s.nome} - Capacidade: ${s.capacidade}`;
+                li.innerHTML = `<span class="nome">${s.nome}</span> <span class="capacidade">Capacidade: ${s.capacidade}</span>`;
                 ul.appendChild(li);
             });
         }
