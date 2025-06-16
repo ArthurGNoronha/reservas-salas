@@ -1,6 +1,6 @@
 # Instruções para Subir os Microsserviços
 
-Este projeto utiliza arquitetura de microsserviços com Docker Compose para orquestração dos containers. Os principais serviços são: Usuários, Reservas, Salas, Gateway, Eureka Server e Adminer para administração dos bancos de dados.
+Este projeto utiliza arquitetura de microsserviços com Docker Compose para orquestração dos containers. Os principais serviços são: Usuários, Reservas, Salas, Gateway, Eureka Server e Adminer.
 
 ---
 
@@ -21,7 +21,6 @@ Este projeto utiliza arquitetura de microsserviços com Docker Compose para orqu
 Certifique-se de que as seguintes ferramentas estejam instaladas no seu ambiente:
 
 - [Docker](https://www.docker.com/get-started)
-- [Docker Compose](https://docs.docker.com/compose/)
 - Git (opcional, para clonar o repositório)
 
 Além disso, as seguintes portas devem estar **liberadas** no seu host:
@@ -54,7 +53,7 @@ reservas-salas/
 └── .idea/
 ```
 
-- **eurekaServer/**: Serviço de descoberta (Eureka)
+- **eurekaServer/**: Serviço de descoberta
 - **gatewayApplication/**: API Gateway para roteamento das requisições
 - **reservasApplication/**: Microsserviço de Reservas
 - **salaApplication/**: Microsserviço de Salas
@@ -67,7 +66,7 @@ reservas-salas/
 
 1. **Clone o repositório (se necessário):**
    ```bash
-   git clone <URL_DO_REPOSITORIO>
+   git clone https://github.com/ArthurGNoronha/reservas-salas
    cd reservas-salas
    ```
 
@@ -87,14 +86,14 @@ reservas-salas/
 
 ## Endpoints dos Microsserviços
 
-**Certifiquesse que o gateway e os microsserviços aparem no eureka antes de tentar acessar.**
+**Certifique-se que o gateway e os microsserviços aparecem no eureka antes de tentar acessar.**
 
 Após a inicialização, os microsserviços estarão disponíveis nos seguintes endereços:
 
-- [`http://localhost:8085/usuarios`](http://localhost:8085/usuarios/front) → **Usuários**
-- [`http://localhost:8082/reservas`](http://localhost:8082/reservas/front) → **Reservas**
-- [`http://localhost:8083/salas`](http://localhost:8083/salas/front) → **Salas**
-- [`http://localhost:8090`](http://localhost:8090/(salas/reservas/usuarios)/front) → **Gateway**
+- [`http://localhost:8085/usuarios/front`](http://localhost:8085/usuarios/front) → **Usuários**
+- [`http://localhost:8082/reservas/front`](http://localhost:8082/reservas/front) → **Reservas**
+- [`http://localhost:8083/salas/front`](http://localhost:8083/salas/front) → **Salas**
+- [`http://localhost:8090/(salas/reservas/usuarios)/front`](http://localhost:8090/reservas/front) → **Gateway**
 - [`http://localhost:8761`](http://localhost:8761) → **Eureka Server**
 - [`http://localhost:8081`](http://localhost:8081) → **Adminer** (interface web para bancos de dados)
 - [`http://localhost:15672`](http://localhost:15672) → **RabbitMQ Management** (usuário: guest, senha: guest)
@@ -129,7 +128,7 @@ Após a inicialização, os microsserviços estarão disponíveis nos seguintes 
 
 - Certifique-se de que nenhuma das portas necessárias esteja sendo utilizada por outros serviços.
 - O Adminer pode ser utilizado para acessar os bancos de dados PostgreSQL de cada microsserviço.
-- O Eureka Server pode ser acessado em [`http://localhost:8761`](http://localhost:8761) para visualizar os microsserviços registrados.
+- O Eureka Server pode ser acessado em [`http://localhost:8761`](http://localhost:8761) para visualizar os microsserviços registrados (Ele pode demorar um pouco para encontrar).
 - O Gateway centraliza as requisições e faz o roteamento para os microsserviços corretos.
 - O RabbitMQ Management pode ser acessado em [`http://localhost:15672`](http://localhost:15672) com usuário e senha `guest`.
 
